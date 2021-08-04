@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 18e521b6f8588c44f9e68c769421eb47
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_CameraControl: {instanceID: 0}
+  - m_MessageText: {instanceID: 0}
+  - m_TankPrefab: {fileID: 6745883256137184554, guid: cb8d20956c1d8e943b1f75eff22dea6c,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
