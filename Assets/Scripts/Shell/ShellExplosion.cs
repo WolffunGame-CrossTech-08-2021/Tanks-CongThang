@@ -8,14 +8,21 @@ public class ShellExplosion : MonoBehaviour
     public float m_MaxDamage = 50f;                  
     public float m_ExplosionForce = 600f;            
     public float m_MaxLifeTime = 2f;                  
-    public float m_ExplosionRadius = 5f;              
+    public float m_ExplosionRadius = 5f;
 
+    public TankShooting TankOwner;
 
     private void Start()
     {
         Destroy(gameObject, m_MaxLifeTime);
     }
 
+    public void Init()
+    {
+        //m_MaxDamage = TankOwner.GetComponent<Stat>().BaseAtk;
+
+        //init will clone data in stat of Tank to Shell and then declare type of this damage
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -80,8 +87,8 @@ public class ShellExplosion : MonoBehaviour
         // Calculate damage as this proportion of the maximum possible damage.
         float damage = relativeDistance * m_MaxDamage;
 
-        // Make sure that the minimum damage is always 0.
-        damage = Mathf.Max(0f, damage);
+        //lowest damage always be 1.
+        damage = Mathf.Max(1f, damage);
 
         return damage;
     }

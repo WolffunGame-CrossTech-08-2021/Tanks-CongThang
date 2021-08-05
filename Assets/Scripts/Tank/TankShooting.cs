@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class TankShooting : MonoBehaviour
 {
     public int m_PlayerNumber = 1;       
-    public Rigidbody m_Shell;            
+    public ShellExplosion m_Shell;            
     public Transform m_FireTransform;    
     public Slider m_AimSlider;           
     public AudioSource m_ShootingAudio;  
@@ -83,12 +83,20 @@ public class TankShooting : MonoBehaviour
         // Set the fired flag so only Fire is only called once.
         m_Fired = true;
 
+        //Add by CT, change shot angle by force
+        float shotAngle = Mathf.Min(10f, m_CurrentLaunchForce - 15);
+        m_FireTransform.Rotate(new Vector3(0 - shotAngle, 0, 0));
+
         // Create an instance of the shell and store a reference to it's rigidbody.
-        Rigidbody shellInstance =
-            Instantiate (m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+        ShellExplosion shellInstance =
+            Instantiate (m_Shell, m_FireTransform.position, m_FireTransform.rotation);
+        shellInstance.TankOwner = this;
 
         // Set the shell's velocity to the launch force in the fire position's forward direction.
-        shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward; ;
+        shellInstance.GetComponent<Rigidbody>().velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+
+        //Reset the fire transform to normal location
+        m_FireTransform.Rotate(new Vector3(0 + shotAngle, 0, 0));
 
         // Change the clip to the firing clip and play it.
         m_ShootingAudio.clip = m_FireClip;

@@ -34,6 +34,9 @@ public class TankManager
         {
             renderers[i].material.color = m_PlayerColor;
         }
+
+        //setup stat
+        m_Instance.GetComponent<TankHealth>().m_StartingHealth = m_Instance.GetComponent<Stat>() ? m_Instance.GetComponent<Stat>().BaseHP : 100;
     }
 
 

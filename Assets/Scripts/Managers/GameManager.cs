@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
     public CameraControl m_CameraControl;   
     public Text m_MessageText;              
     public GameObject m_TankPrefab;         
-    public TankManager[] m_Tanks;           
+    public TankManager[] m_Tanks;
+
+    public GameObject MainButton;
 
 
     private int m_RoundNumber;              
@@ -25,6 +27,8 @@ public class GameManager : MonoBehaviour
         // Create the delays so they only have to be made once.
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
+
+        MainButton.GetComponent<Button>()?.onClick.AddListener(OnPressRestart);
 
         SpawnAllTanks();
         SetCameraTargets();
@@ -82,7 +86,9 @@ public class GameManager : MonoBehaviour
         {
             // If there is a game winner, restart the level.
             //Application.LoadLevel(Application.loadedLevel);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+            MainButton.SetActive(true);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         else
         {
@@ -233,7 +239,6 @@ public class GameManager : MonoBehaviour
         return message;
     }
 
-
     // This function is used to turn all the tanks back on and reset their positions and properties.
     private void ResetAllTanks()
     {
@@ -259,5 +264,13 @@ public class GameManager : MonoBehaviour
         {
             m_Tanks[i].DisableControl();
         }
+    }
+
+    //function for UI button
+    public void OnPressRestart()
+    {
+        Debug.Log("restart now");
+        MainButton.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
