@@ -1,10 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+public enum ShellType
+{
+    Explosion,
+    Straight,
+    Poision,
+}
+
 public class TankShooting : MonoBehaviour
 {
-    public int m_PlayerNumber = 1;       
-    public Rigidbody m_Shell;            
+    public int m_PlayerNumber = 1;  
+    
+    public ShellExplosion m_Shell_Explosion;
+    public ShellStraight m_Shell_Straight;
+
     public Transform m_FireTransform;    
     public Slider m_AimSlider;           
     public AudioSource m_ShootingAudio;  
@@ -17,8 +27,9 @@ public class TankShooting : MonoBehaviour
     private string m_FireButton;         
     private float m_CurrentLaunchForce;  
     private float m_ChargeSpeed;         
-    private bool m_Fired;                
+    private bool m_Fired;
 
+    public ShellType ShellWheel;
 
     private void OnEnable()
     {
@@ -83,12 +94,21 @@ public class TankShooting : MonoBehaviour
         // Set the fired flag so only Fire is only called once.
         m_Fired = true;
 
-        // Create an instance of the shell and store a reference to it's rigidbody.
-        Rigidbody shellInstance =
-            Instantiate (m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+        switch(ShellWheel)
+        {
+            case ShellType.Explosion:
+                // Create an instance of the shell and store a reference to it's rigidbody.
+                ShellExplosion shellInstance = Instantiate(m_Shell_Explosion, m_FireTransform.position, m_FireTransform.rotation);
+                shellInstance.Shoot(m_CurrentLaunchForce);
+                break;
+            case ShellType.Straight:
+                Quaternion rotationTemp = Quaternion.Euler(0, m_FireTransform.rotation.eulerAngles.y, m_FireTransform.rotation.eulerAngles.z);
+                ShellStraight shellStraight = Instantiate(m_Shell_Straight, m_FireTransform.position, rotationTemp);
+                shellStraight.Owner = GetComponent<TankHealth>();
+                shellStraight.Shoot(m_CurrentLaunchForce);
+                break;
+        }
 
-        // Set the shell's velocity to the launch force in the fire position's forward direction.
-        shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward; ;
 
         // Change the clip to the firing clip and play it.
         m_ShootingAudio.clip = m_FireClip;
