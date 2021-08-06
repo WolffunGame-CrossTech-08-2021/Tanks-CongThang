@@ -1,22 +1,13 @@
 ﻿using UnityEngine;
 
-public class ShellExplosion : MonoBehaviour
+public class ShellExplosion : BaseShell
 {
-    public LayerMask m_TankMask;
     public ParticleSystem m_ExplosionParticles;       
-    public AudioSource m_ExplosionAudio;              
-    public float m_MaxDamage = 50f;                  
-    public float m_ExplosionForce = 600f;            
-    public float m_MaxLifeTime = 2f;                  
+    public AudioSource m_ExplosionAudio;                               
+    public float m_ExplosionForce = 600f;                             
     public float m_ExplosionRadius = 5f;              
 
-
-    private void Start()
-    {
-        Destroy(gameObject, m_MaxLifeTime);
-    }
-
-    public void Shoot(float force)
+    public void Fire(float force)
     {
         GetComponent<Rigidbody>().velocity = transform.forward * force;
     }
@@ -40,18 +31,17 @@ public class ShellExplosion : MonoBehaviour
             // Add an explosion force.
             targetRigidbody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius);
 
-            // Find the TankHealth script associated with the rigidbody.
-            TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth>();
+            TankInfo targetInfo = targetRigidbody.GetComponent<TankInfo>();
 
             // If there is no TankHealth script attached to the gameobject, go on to the next collider.
-            if (!targetHealth)
+            if (!targetInfo)
                 continue;
 
             // Calculate the amount of damage the target should take based on it's distance from the shell.
             float damage = CalculateDamage(targetRigidbody.position);
 
             // Deal this damage to the tank.
-            targetHealth.TakeDamage(damage);
+            targetInfo.TankHeatlh.TakeDamage(damage);
         }
 
         // Unparent the particles from the shell.

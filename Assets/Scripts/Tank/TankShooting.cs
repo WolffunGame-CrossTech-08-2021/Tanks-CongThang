@@ -1,11 +1,20 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
-public enum ShellType
+
+public enum ShootingInputType
 {
-    Explosion,
-    Straight,
-    Poision,
+    Instant,
+    Charge,
+    Trigger,
+}
+
+[System.Serializable]
+public class ShootingInputDictionary
+{
+    public ShootingInputType key;
+    public BaseShootingInput value;
 }
 
 public class TankShooting : MonoBehaviour
@@ -24,97 +33,72 @@ public class TankShooting : MonoBehaviour
     public float m_MaxLaunchForce = 30f; 
     public float m_MaxChargeTime = 0.75f;
 
-    private string m_FireButton;         
-    private float m_CurrentLaunchForce;  
-    private float m_ChargeSpeed;         
-    private bool m_Fired;
+    public string m_FireButton;               
+    public bool m_Fired;
 
-    public ShellType ShellWheel;
+    public ShellType CurrentShell;
+
+    public List<ShootingInputDictionary> ListShootingInput;
+    public BaseShootingInput CurrentShootingInput;
 
     private void OnEnable()
     {
-        // When the tank is turned on, reset the launch force and the UI
-        m_CurrentLaunchForce = m_MinLaunchForce;
-        m_AimSlider.value = m_MinLaunchForce;
+        ChangeShell(ShellType.Explosion);
     }
-
 
     private void Start ()
     {
         // The fire axis is based on the player number.
         m_FireButton = "Fire" + m_PlayerNumber;
-
-        // The rate that the launch force charges up is the range of possible forces by the max charge time.
-        m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
+        ChangeShell(ShellType.Explosion);
     }
 
+    public void ChangeShell(ShellType type)
+    {
+        CurrentShell = type;
+        CurrentShootingInput = GetShootingInput(ManagerShell.Ins.GetShell(CurrentShell).ShootingType);
+        CurrentShootingInput.TankShootingRef = this;
+    }
+
+    public BaseShootingInput GetShootingInput(ShootingInputType type)
+    {
+        return ListShootingInput[ListShootingInput.FindIndex(s => s.key == type)].value;
+    }
 
     private void Update ()
     {
-        // The slider should have a default value of the minimum launch force.
-        m_AimSlider.value = m_MinLaunchForce;
-
-        // If the max force has been exceeded and the shell hasn't yet been launched...
-        if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
-        {
-            // ... use the max force and launch the shell.
-            m_CurrentLaunchForce = m_MaxLaunchForce;
-            Fire ();
-        }
-        // Otherwise, if the fire button has just started being pressed...
-        else if (Input.GetButtonDown (m_FireButton))
-        {
-            // ... reset the fired flag and reset the launch force.
-            m_Fired = false;
-            m_CurrentLaunchForce = m_MinLaunchForce;
-
-            // Change the clip to the charging clip and start it playing.
-            m_ShootingAudio.clip = m_ChargingClip;
-            m_ShootingAudio.Play ();
-        }
-        // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
-        else if (Input.GetButton (m_FireButton) && !m_Fired)
-        {
-            // Increment the launch force and update the slider.
-            m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
-
-            m_AimSlider.value = m_CurrentLaunchForce;
-        }
-        // Otherwise, if the fire button is released and the shell hasn't been launched yet...
-        else if (Input.GetButtonUp (m_FireButton) && !m_Fired)
-        {
-            // ... launch the shell.
-            Fire ();
-        }
+        CurrentShootingInput.ShootingUpdate();
     }
 
 
-    private void Fire ()
-    {
-        // Set the fired flag so only Fire is only called once.
-        m_Fired = true;
+    //private void Fire ()
+    //{
+    //    // Set the fired flag so only Fire is only called once.
+    //    m_Fired = true;
 
-        switch(ShellWheel)
-        {
-            case ShellType.Explosion:
-                // Create an instance of the shell and store a reference to it's rigidbody.
-                ShellExplosion shellInstance = Instantiate(m_Shell_Explosion, m_FireTransform.position, m_FireTransform.rotation);
-                shellInstance.Shoot(m_CurrentLaunchForce);
-                break;
-            case ShellType.Straight:
-                Quaternion rotationTemp = Quaternion.Euler(0, m_FireTransform.rotation.eulerAngles.y, m_FireTransform.rotation.eulerAngles.z);
-                ShellStraight shellStraight = Instantiate(m_Shell_Straight, m_FireTransform.position, rotationTemp);
-                shellStraight.Owner = GetComponent<TankHealth>();
-                shellStraight.Shoot(m_CurrentLaunchForce);
-                break;
-        }
+    //    Debug.Log(m_Shell_Explosion.m_MaxDamage);
+
+    //    switch (ShellWheel)
+    //    {
+    //        case ShellType.Explosion:
+    //            // Create an instance of the shell and store a reference to it's rigidbody.
+    //            ShellExplosion shellInstance = Instantiate(m_Shell_Explosion, m_FireTransform.position, m_FireTransform.rotation);
+    //            shellInstance.Fire(m_CurrentLaunchForce);
+    //            break;
+    //        case ShellType.Straight:
+    //            Quaternion rotationTemp = Quaternion.Euler(0, m_FireTransform.rotation.eulerAngles.y, m_FireTransform.rotation.eulerAngles.z);
+    //            ShellStraight shellStraight = Instantiate(m_Shell_Straight, m_FireTransform.position, rotationTemp);
+    //            shellStraight.Owner = GetComponent<TankInfo>();
+    //            shellStraight.Fire(m_CurrentLaunchForce);
+    //            break;
+    //    }
 
 
-        // Change the clip to the firing clip and play it.
-        m_ShootingAudio.clip = m_FireClip;
-        m_ShootingAudio.Play ();
+    //    // Change the clip to the firing clip and play it.
+    //    m_ShootingAudio.clip = m_FireClip;
+    //    m_ShootingAudio.Play ();
 
-        // Reset the launch force.  This is a precaution in case of missing button events.
-        m_CurrentLaunchForce = m_MinLaunchForce;
-    }
+    //    // Reset the launch force.  This is a precaution in case of missing button events.
+    //    m_CurrentLaunchForce = m_MinLaunchForce;
+    //}
 }
