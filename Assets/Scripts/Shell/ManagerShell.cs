@@ -6,7 +6,8 @@ public enum ShellType
 {
     Explosion,
     Straight,
-    Poision,
+    Poison,
+    Time,
 }
 
 [System.Serializable]

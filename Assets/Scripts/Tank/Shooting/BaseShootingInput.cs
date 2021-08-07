@@ -5,6 +5,7 @@ using UnityEngine;
 public class BaseShootingInput: MonoBehaviour
 {
     public TankShooting TankShootingRef;
+    public BaseShell Shell;
     public virtual void ShootingUpdate()
     {
 

@@ -8,7 +8,7 @@ public class BaseShell : MonoBehaviour
     public float m_MaxDamage = 50f;
     public float m_MaxLifeTime = 2f;
     public TankInfo Owner;
-    public ShootingInputType ShootingType;
+    public BaseShootingInput ShootingType;
     // Start is called before the first frame update
     protected virtual void Start()
     {

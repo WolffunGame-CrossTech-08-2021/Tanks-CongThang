@@ -11,9 +11,11 @@ public class ShootingInputCharge : BaseShootingInput
     private float m_CurrentLaunchForce;
     private float m_ChargeSpeed;
 
-    private void OnEnable()
+    private void Start()
     {
-        // When the tank is turned on, reset the launch force and the UI
+        Shell = ManagerShell.Ins.GetShell(TankShootingRef.CurrentShell);
+        (Shell as IShootingCharge).Setup(this);
+
         m_CurrentLaunchForce = m_MinLaunchForce;
         TankShootingRef.m_AimSlider.value = m_MinLaunchForce;
         m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
@@ -64,8 +66,12 @@ public class ShootingInputCharge : BaseShootingInput
         TankShootingRef.m_Fired = true;
 
         // Create an instance of the shell and store a reference to it's rigidbody.
-        ShellExplosion shellInstance = Instantiate(TankShootingRef.m_Shell_Explosion, TankShootingRef.m_FireTransform.position, TankShootingRef.m_FireTransform.rotation);
-        shellInstance.Fire(m_CurrentLaunchForce);
+        BaseShell shellInstance = Instantiate(Shell, TankShootingRef.m_FireTransform.position, TankShootingRef.m_FireTransform.rotation);
+        shellInstance.Owner = TankShootingRef.GetComponent<TankInfo>();
+        if (shellInstance is IShootingCharge)
+        {
+            (shellInstance as IShootingCharge).Fire(m_CurrentLaunchForce);
+        }
 
         // Change the clip to the firing clip and play it.
         TankShootingRef.m_ShootingAudio.clip = TankShootingRef.m_FireClip;

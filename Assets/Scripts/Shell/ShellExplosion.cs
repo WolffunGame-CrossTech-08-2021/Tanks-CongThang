@@ -1,20 +1,34 @@
 ﻿using UnityEngine;
 
-public class ShellExplosion : BaseShell
+public class ShellExplosion : BaseShell, IShootingCharge
 {
     public ParticleSystem m_ExplosionParticles;       
     public AudioSource m_ExplosionAudio;                               
     public float m_ExplosionForce = 600f;                             
-    public float m_ExplosionRadius = 5f;              
+    public float m_ExplosionRadius = 5f;
+
+    public float m_MinLaunchForce = 15f;
+    public float m_MaxLaunchForce = 30f;
+    public float m_MaxChargeTime = 0.75f;
+
+    public void Setup(ShootingInputCharge i)
+    {
+        i.m_MinLaunchForce = m_MinLaunchForce;
+        i.m_MaxLaunchForce = m_MaxLaunchForce;
+        i.m_MaxChargeTime = m_MaxChargeTime;
+    }
 
     public void Fire(float force)
     {
         GetComponent<Rigidbody>().velocity = transform.forward * force;
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Field")
+        {
+            return;
+        }
         // Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
         Collider[] colliders = Physics.OverlapSphere(transform.position, m_ExplosionRadius, m_TankMask);
 

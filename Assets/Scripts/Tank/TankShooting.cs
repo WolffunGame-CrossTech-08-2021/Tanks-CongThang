@@ -2,71 +2,62 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
-public enum ShootingInputType
-{
-    Instant,
-    Charge,
-    Trigger,
-}
-
-[System.Serializable]
-public class ShootingInputDictionary
-{
-    public ShootingInputType key;
-    public BaseShootingInput value;
-}
-
 public class TankShooting : MonoBehaviour
 {
     public int m_PlayerNumber = 1;  
-    
-    public ShellExplosion m_Shell_Explosion;
-    public ShellStraight m_Shell_Straight;
 
     public Transform m_FireTransform;    
     public Slider m_AimSlider;           
     public AudioSource m_ShootingAudio;  
     public AudioClip m_ChargingClip;     
     public AudioClip m_FireClip;         
-    public float m_MinLaunchForce = 15f; 
-    public float m_MaxLaunchForce = 30f; 
-    public float m_MaxChargeTime = 0.75f;
 
-    public string m_FireButton;               
+    public string m_FireButton;
+    public string m_ChangeButton;
     public bool m_Fired;
 
+    public List<ShellType> MyShells;
     public ShellType CurrentShell;
 
-    public List<ShootingInputDictionary> ListShootingInput;
-    public BaseShootingInput CurrentShootingInput;
-
-    private void OnEnable()
-    {
-        ChangeShell(ShellType.Explosion);
-    }
+    public BaseShootingInput CurrentShootingInput = null;
 
     private void Start ()
     {
         // The fire axis is based on the player number.
         m_FireButton = "Fire" + m_PlayerNumber;
+        m_ChangeButton = "ChangeShell" + m_PlayerNumber;
         ChangeShell(ShellType.Explosion);
     }
 
     public void ChangeShell(ShellType type)
     {
+        if(CurrentShootingInput != null)
+        {
+            Destroy(CurrentShootingInput.gameObject);
+            CurrentShootingInput = null;
+        }
         CurrentShell = type;
-        CurrentShootingInput = GetShootingInput(ManagerShell.Ins.GetShell(CurrentShell).ShootingType);
+        CurrentShootingInput = Instantiate(ManagerShell.Ins.GetShell(CurrentShell).ShootingType, transform);
         CurrentShootingInput.TankShootingRef = this;
     }
 
-    public BaseShootingInput GetShootingInput(ShootingInputType type)
+    public void ClickChangeShellButton()
     {
-        return ListShootingInput[ListShootingInput.FindIndex(s => s.key == type)].value;
+        int c = MyShells.IndexOf(CurrentShell);
+        c++;
+        if(c == MyShells.Count)
+        {
+            c = 0;
+        }
+        ChangeShell(MyShells[c]);
     }
 
     private void Update ()
     {
+        if (Input.GetButtonDown(m_ChangeButton))
+        {
+            ClickChangeShellButton();
+        }
         CurrentShootingInput.ShootingUpdate();
     }
 
