@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInfo : MonoBehaviour
 {
     public TankInfo tankInfo;
-    public GameObject currentIcon;
+    public Image currentIcon;
 
     void Start()
     {
@@ -16,14 +17,15 @@ public class PlayerInfo : MonoBehaviour
     {
         tankInfo = t;
         tankInfo.TankShooting.ShellChanged += ChangeIcon;
+
         ChangeIcon();
     }
 
     public void ChangeIcon()
     {
-        if (currentIcon)
+        if (currentIcon != null)
         {
-            Destroy(currentIcon);
+            Destroy(currentIcon.gameObject);
         }
         currentIcon = Instantiate(ManagerShell.Ins.GetIcon(tankInfo.TankShooting.CurrentShell), transform);
     }

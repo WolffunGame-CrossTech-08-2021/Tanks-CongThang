@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum ShellType
 {
@@ -15,7 +16,7 @@ public class ShellDictionary
 {
     public ShellType key;
     public BaseShell value;
-    public GameObject icon;
+    public Image icon;
 }
 
 public class ManagerShell : MonoBehaviour
@@ -33,7 +34,7 @@ public class ManagerShell : MonoBehaviour
         return shellDictionary[shellDictionary.FindIndex(s => s.key == type)].value;
     }
 
-    public GameObject GetIcon(ShellType type)
+    public Image GetIcon(ShellType type)
     {
         return shellDictionary[shellDictionary.FindIndex(s => s.key == type)].icon;
     }
