@@ -39,6 +39,7 @@ public class TankShooting : MonoBehaviour
         CurrentShell = type;
         CurrentShootingInput = Instantiate(ManagerShell.Ins.GetShell(CurrentShell).ShootingType, transform);
         CurrentShootingInput.TankShootingRef = this;
+        ShellChanged.Invoke();
     }
 
     public void ClickChangeShellButton()
@@ -60,6 +61,10 @@ public class TankShooting : MonoBehaviour
         }
         CurrentShootingInput.ShootingUpdate();
     }
+
+    //  Event Handlers --------------------------------
+    public delegate void ShellChangedHandler();
+    public event ShellChangedHandler ShellChanged;
 
 
     //private void Fire ()

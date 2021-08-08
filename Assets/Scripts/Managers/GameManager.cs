@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class GameManager : MonoBehaviour
     public CameraControl m_CameraControl;   
     public Text m_MessageText;              
     public GameObject m_TankPrefab;         
-    public TankManager[] m_Tanks;           
+    public TankManager[] m_Tanks;
 
+    public PlayerInfo[] PlayerInfoList;
 
     private int m_RoundNumber;              
     private WaitForSeconds m_StartWait;     
@@ -36,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     private void SpawnAllTanks()
     {
+        int j = 0;
         // For all the tanks...
         for (int i = 0; i < m_Tanks.Length; i++)
         {
@@ -44,6 +47,11 @@ public class GameManager : MonoBehaviour
                 Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
             m_Tanks[i].m_PlayerNumber = i + 1;
             m_Tanks[i].Setup();
+            if(j < PlayerInfoList.Length)
+            {
+                PlayerInfoList[j].Assign(m_Tanks[i].m_Instance.GetComponent<TankInfo>());
+                j++;
+            }
         }
     }
 

@@ -15,6 +15,7 @@ public class ShellDictionary
 {
     public ShellType key;
     public BaseShell value;
+    public GameObject icon;
 }
 
 public class ManagerShell : MonoBehaviour
@@ -30,5 +31,10 @@ public class ManagerShell : MonoBehaviour
     public BaseShell GetShell(ShellType type)
     {
         return shellDictionary[shellDictionary.FindIndex(s => s.key == type)].value;
+    }
+
+    public GameObject GetIcon(ShellType type)
+    {
+        return shellDictionary[shellDictionary.FindIndex(s => s.key == type)].icon;
     }
 }

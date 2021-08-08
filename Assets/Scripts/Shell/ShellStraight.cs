@@ -7,8 +7,8 @@ public class ShellStraight : BaseShell, IShootingInstant
     public ParticleSystem m_ExplosionParticles;
     public AudioSource m_ExplosionAudio;
     public float m_ExplosionForce = 120f;
-    public float m_ExplosionRadius = 3f;
-    public float m_ScanRadius = 6f;
+    public float m_ExplosionRadius = 2f;
+    public float m_ScanRadius = 3f;
     public Vector3 accelarate = Vector3.zero;
     public Vector3 accelarate_rotation = Vector3.zero;
 
@@ -44,8 +44,8 @@ public class ShellStraight : BaseShell, IShootingInstant
             target.Set(target.x, 0, target.z);
             //Debug.Log(target.x + " " + target.y + " " + target.z);
             GetComponent<Rigidbody>().velocity = Vector3.SmoothDamp(GetComponent<Rigidbody>().velocity, target / target.magnitude * m_Force, ref accelarate, 0.1f);
-            //transform.rotation = Quaternion.Euler(Vector3.SmoothDamp(transform.rotation.eulerAngles, -target, ref accelarate_rotation, 0.1f));
-            
+            float angleBetween = Vector3.Angle(transform.forward, target);
+            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + angleBetween, transform.rotation.eulerAngles.z));
         }
     }
 
