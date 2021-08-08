@@ -1,22 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class ShellExplosion : BaseShell, IShootingCharge
+public class ShellTimeExtraBomb : BaseShell
 {
-    public ParticleSystem m_ExplosionParticles;       
-    public AudioSource m_ExplosionAudio;                               
-    public float m_ExplosionForce = 600f;                             
-    public float m_ExplosionRadius = 5f;
+    public ParticleSystem m_ExplosionParticles;
+    public AudioSource m_ExplosionAudio;
+    public float m_ExplosionForce = 50f;
+    public float m_ExplosionRadius = 3f;
 
-    public float m_MinLaunchForce = 15f;
-    public float m_MaxLaunchForce = 30f;
     public float m_MaxChargeTime = 0.75f;
-
-    public void Setup(ShootingInputCharge i)
-    {
-        i.m_MinLaunchForce = m_MinLaunchForce;
-        i.m_MaxLaunchForce = m_MaxLaunchForce;
-        i.m_MaxChargeTime = m_MaxChargeTime;
-    }
 
     public void Fire(float force)
     {
