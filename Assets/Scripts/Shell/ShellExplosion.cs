@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
 public class ShellExplosion : BaseShell, IShootingCharge
-{
-    public ParticleSystem m_ExplosionParticles;       
-    public AudioSource m_ExplosionAudio;                               
+{                            
     public float m_ExplosionForce = 600f;                             
     public float m_ExplosionRadius = 5f;
 
@@ -20,12 +18,12 @@ public class ShellExplosion : BaseShell, IShootingCharge
 
     public void Fire(float force)
     {
-        GetComponent<Rigidbody>().velocity = transform.forward * force;
+        myRigidbody.velocity = transform.forward * force;
     }
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Field")
+        if (1 << other.gameObject.layer == IgnoreMask.value)
         {
             return;
         }
@@ -58,20 +56,17 @@ public class ShellExplosion : BaseShell, IShootingCharge
             targetInfo.TankHeatlh.TakeDamage(damage);
         }
 
-        // Unparent the particles from the shell.
-        m_ExplosionParticles.transform.parent = null;
-
-        // Play the particle system.
-        m_ExplosionParticles.Play();
-
-        // Play the explosion sound effect.
-        m_ExplosionAudio.Play();
+        Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);
+        ex.gameObject.transform.position = transform.position;
+        ex.gameObject.SetActive(true);
+        ex.Play();
 
         // Once the particles have finished, destroy the gameobject they are on.
-        Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
+        //Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
 
         // Destroy the shell.
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        ResetShellToPool();
     }
 
 

@@ -13,7 +13,7 @@ public class TankMovement : MonoBehaviour
 
     private string m_MovementAxisName;
     private string m_TurnAxisName;
-    private Rigidbody m_Rigidbody;
+    public Rigidbody m_Rigidbody;
     private float m_MovementInputValue;
     private float m_TurnInputValue;
     private float m_OriginalPitch;
@@ -21,7 +21,7 @@ public class TankMovement : MonoBehaviour
 
     private void Awake()
     {
-        m_Rigidbody = GetComponent<Rigidbody>();
+        //m_Rigidbody = GetComponent<Rigidbody>();
     }
 
 

@@ -10,8 +10,14 @@ public class ShootingInputInstant : BaseShootingInput
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    public override void Setup()
+    {
+        base.Setup();
         // The slider should have a default value of the minimum launch force.
-        TankShootingRef.m_AimSlider.value = 5f;
+        TankShootingRef.m_AimSlider.value = 15f;
 
         Shell = ManagerShell.Ins.GetShell(TankShootingRef.CurrentShell);
         (Shell as IShootingInstant).Setup(this);
@@ -41,9 +47,14 @@ public class ShootingInputInstant : BaseShootingInput
         // Set the fired flag so only Fire is only called once.
         TankShootingRef.m_Fired = true;
 
-        // Create an instance of the shell and store a reference to it's rigidbody.
-        Quaternion rotationTemp = Quaternion.Euler(0, TankShootingRef.m_FireTransform.rotation.eulerAngles.y, TankShootingRef.m_FireTransform.rotation.eulerAngles.z);
-        BaseShell shellInstance = Instantiate(Shell, TankShootingRef.m_FireTransform.position, rotationTemp);
+        Transform temp = TankShootingRef.m_FireTransform;
+        Quaternion rotationTemp = Quaternion.Euler(0, temp.rotation.eulerAngles.y, temp.rotation.eulerAngles.z);
+        //BaseShell shellInstance = Instantiate(Shell, TankShootingRef.m_FireTransform.position, rotationTemp);
+        BaseShell shellInstance = ManagerShell.Ins.GetShellObject(TankShootingRef.CurrentShell);
+        shellInstance.transform.position = temp.position;
+        shellInstance.transform.rotation = rotationTemp;
+        shellInstance.gameObject.SetActive(true);
+
         shellInstance.Owner = TankShootingRef.GetComponent<TankInfo>();
         if (shellInstance is IShootingInstant)
         {

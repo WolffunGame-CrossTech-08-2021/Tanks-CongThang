@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ShellTime : BaseShell, IShootingCharge
 {
-    public ParticleSystem m_ExplosionParticles;
-    public AudioSource m_ExplosionAudio;
-
     public float m_ExplosionRadius = 5f;
 
     public float m_MinLaunchForce = 3f;
@@ -31,8 +28,9 @@ public class ShellTime : BaseShell, IShootingCharge
         GetComponent<Rigidbody>().velocity = transform.forward * Force;
     }
 
-    private void Update()
+    public override void Update()
     {
+        base.Update();
         TimeCountDown -= Time.deltaTime;
         if(TimeCountDown<0)
         {
@@ -69,19 +67,16 @@ public class ShellTime : BaseShell, IShootingCharge
             targetInfo.TankHeatlh.TakeDamage(m_MaxDamage);
         }
 
-        // Unparent the particles from the shell.
-        m_ExplosionParticles.transform.parent = null;
-
-        // Play the particle system.
-        m_ExplosionParticles.Play();
-
-        // Play the explosion sound effect.
-        m_ExplosionAudio.Play();
+        Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);
+        ex.gameObject.transform.position = transform.position;
+        ex.gameObject.SetActive(true);
+        ex.Play();
 
         // Once the particles have finished, destroy the gameobject they are on.
-        Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
+        //Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
 
         // Destroy the shell.
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        ResetShellToPool();
     }
 }

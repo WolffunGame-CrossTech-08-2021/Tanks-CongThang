@@ -28,6 +28,27 @@ public class TankInfo : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        UnityEngine.Profiling.Profiler.BeginSample("---transform");
+
+        for (int i = 0; i < 1000; i++)
+        {
+            transform.position = transform.position;
+        }
+
+        UnityEngine.Profiling.Profiler.EndSample();
+
+        UnityEngine.Profiling.Profiler.BeginSample("cache---transform");
+        var cachetransform = transform;
+        for (int i = 0; i < 1000; i++)
+        {
+            cachetransform.position = cachetransform.position;
+        }
+
+        UnityEngine.Profiling.Profiler.EndSample();
+    }
+
     public BaseStatus GetBaseStatus(Status status)
     {
         return StatusList.Find(s => s.id == status);

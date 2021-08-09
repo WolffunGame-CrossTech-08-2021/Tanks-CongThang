@@ -10,4 +10,9 @@ public class BaseShootingInput: MonoBehaviour
     {
 
     }
+
+    public virtual void Setup()
+    {
+
+    }
 }

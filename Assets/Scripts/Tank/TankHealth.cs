@@ -8,7 +8,7 @@ public class TankHealth : MonoBehaviour
     public Image m_FillImage;                      
     public Color m_FullHealthColor = Color.green;  
     public Color m_ZeroHealthColor = Color.red;    
-    public GameObject m_ExplosionPrefab;
+    public ParticleSystem m_ExplosionPrefab;
 
 
     private AudioSource m_ExplosionAudio;
@@ -19,7 +19,7 @@ public class TankHealth : MonoBehaviour
 
     private void Awake()
     {
-        m_ExplosionParticles = Instantiate(m_ExplosionPrefab).GetComponent<ParticleSystem>();
+        m_ExplosionParticles = Instantiate(m_ExplosionPrefab);
         m_ExplosionAudio = m_ExplosionParticles.GetComponent<AudioSource>();
 
         m_ExplosionParticles.gameObject.SetActive(false);

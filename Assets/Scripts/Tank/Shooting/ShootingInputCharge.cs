@@ -13,6 +13,12 @@ public class ShootingInputCharge : BaseShootingInput
 
     private void Start()
     {
+        
+    }
+
+    public override void Setup()
+    {
+        base.Setup();
         Shell = ManagerShell.Ins.GetShell(TankShootingRef.CurrentShell);
         (Shell as IShootingCharge).Setup(this);
 
@@ -65,8 +71,13 @@ public class ShootingInputCharge : BaseShootingInput
         // Set the fired flag so only Fire is only called once.
         TankShootingRef.m_Fired = true;
 
-        // Create an instance of the shell and store a reference to it's rigidbody.
-        BaseShell shellInstance = Instantiate(Shell, TankShootingRef.m_FireTransform.position, TankShootingRef.m_FireTransform.rotation);
+        //BaseShell shellInstance = Instantiate(Shell, TankShootingRef.m_FireTransform.position, TankShootingRef.m_FireTransform.rotation);
+        BaseShell shellInstance = ManagerShell.Ins.GetShellObject(TankShootingRef.CurrentShell);
+        Transform temp = TankShootingRef.m_FireTransform;
+        shellInstance.transform.position = temp.position;
+        shellInstance.transform.rotation = temp.rotation;
+        shellInstance.gameObject.SetActive(true);
+
         shellInstance.Owner = TankShootingRef.GetComponent<TankInfo>();
         if (shellInstance is IShootingCharge)
         {

@@ -2,6 +2,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ShootingInputType
+{
+    Charge,
+    Instant, //will count as keep button
+}
+
+[System.Serializable]
+public class ShootingInputDictionary
+{
+    public ShootingInputType keys;
+    public BaseShootingInput value;
+}
+
 public class TankShooting : MonoBehaviour
 {
     public int m_PlayerNumber = 1;  
@@ -21,6 +34,8 @@ public class TankShooting : MonoBehaviour
 
     public BaseShootingInput CurrentShootingInput = null;
 
+    public List<ShootingInputDictionary> ListShootingInput;
+
     private void Start ()
     {
         // The fire axis is based on the player number.
@@ -33,12 +48,13 @@ public class TankShooting : MonoBehaviour
     {
         if(CurrentShootingInput != null)
         {
-            Destroy(CurrentShootingInput.gameObject);
+            //Destroy(CurrentShootingInput.gameObject);
             CurrentShootingInput = null;
         }
         CurrentShell = type;
-        CurrentShootingInput = Instantiate(ManagerShell.Ins.GetShell(CurrentShell).ShootingType, transform);
-        CurrentShootingInput.TankShootingRef = this;
+        CurrentShootingInput = ListShootingInput.Find(x => ManagerShell.Ins.GetShell(CurrentShell).shootingType == x.keys).value;
+        CurrentShootingInput.Setup();
+        //CurrentShootingInput.TankShootingRef = this;
         ShellChanged.Invoke();
     }
 

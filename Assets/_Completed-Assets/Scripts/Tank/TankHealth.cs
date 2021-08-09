@@ -10,7 +10,7 @@ namespace Complete
         public Image m_FillImage;                           // The image component of the slider.
         public Color m_FullHealthColor = Color.green;       // The color the health bar will be when on full health.
         public Color m_ZeroHealthColor = Color.red;         // The color the health bar will be when on no health.
-        public GameObject m_ExplosionPrefab;                // A prefab that will be instantiated in Awake, then used whenever the tank dies.
+        public ParticleSystem m_ExplosionPrefab;                // A prefab that will be instantiated in Awake, then used whenever the tank dies.
         
         
         private AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
@@ -22,7 +22,7 @@ namespace Complete
         private void Awake ()
         {
             // Instantiate the explosion prefab and get a reference to the particle system on it.
-            m_ExplosionParticles = Instantiate (m_ExplosionPrefab).GetComponent<ParticleSystem> ();
+            m_ExplosionParticles = Instantiate (m_ExplosionPrefab);
 
             // Get a reference to the audio source on the instantiated prefab.
             m_ExplosionAudio = m_ExplosionParticles.GetComponent<AudioSource> ();

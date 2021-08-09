@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ShellStraight : BaseShell, IShootingInstant
 {
-    public ParticleSystem m_ExplosionParticles;
-    public AudioSource m_ExplosionAudio;
     public float m_ExplosionForce = 120f;
     public float m_ExplosionRadius = 2f;
     public float m_ScanRadius = 3f;
     public Vector3 accelarate = Vector3.zero;
     public Vector3 accelarate_rotation = Vector3.zero;
+
+    public TankInfo targetTank;
 
     public float DelayFire = 0.4f;
 
@@ -23,36 +23,44 @@ public class ShellStraight : BaseShell, IShootingInstant
 
     public void Fire()
     {
-        GetComponent<Rigidbody>().velocity = transform.forward * m_Force;
+        myRigidbody.velocity = transform.forward * m_Force;
     }
 
-    private void Update()
+    public override void Update()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, m_ScanRadius, m_TankMask);
-        for (int i = 0; i < colliders.Length; i++)
+        base.Update();
+        if(targetTank != null)
         {
-            Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
-            if (!targetRigidbody)
-                continue;
-
-            TankInfo targetInfo = targetRigidbody.GetComponent<TankInfo>();
-            if (!targetInfo || targetInfo.gameObject == Owner?.gameObject)
-                continue;
-
             // Calculate the new velocity vector
-            Vector3 target = targetInfo.gameObject.transform.position - transform.position;
+            Vector3 target = targetTank.gameObject.transform.position - transform.position;
             target.Set(target.x, 0, target.z);
             //Debug.Log(target.x + " " + target.y + " " + target.z);
-            GetComponent<Rigidbody>().velocity = Vector3.SmoothDamp(GetComponent<Rigidbody>().velocity, target / target.magnitude * m_Force, ref accelarate, 0.1f);
+            myRigidbody.velocity = Vector3.SmoothDamp(myRigidbody.velocity, target / target.magnitude * m_Force, ref accelarate, 0.1f);
             float angleBetween = Vector3.Angle(transform.forward, target);
             transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + angleBetween, transform.rotation.eulerAngles.z));
+        }
+        else
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, m_ScanRadius, m_TankMask);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
+                if (!targetRigidbody)
+                    continue;
+
+                TankInfo targetInfo = targetRigidbody.GetComponent<TankInfo>();
+                if (!targetInfo || targetInfo.gameObject == Owner?.gameObject)
+                    continue;
+
+                targetTank = targetInfo;
+            }
         }
     }
 
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Field")
+        if (1 << other.gameObject.layer == IgnoreMask.value)
         {
             return;
         }
@@ -86,19 +94,23 @@ public class ShellStraight : BaseShell, IShootingInstant
             targetInfo.TankHeatlh.TakeDamage(damage);
         }
 
-        // Unparent the particles from the shell.
-        m_ExplosionParticles.transform.parent = null;
-
-        // Play the particle system.
-        m_ExplosionParticles.Play();
-
-        // Play the explosion sound effect.
-        m_ExplosionAudio.Play();
+        Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);
+        ex.gameObject.transform.position = transform.position;
+        ex.gameObject.SetActive(true);
+        ex.Play();
 
         // Once the particles have finished, destroy the gameobject they are on.
-        Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
+        //Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
+        //m_ExplosionParticles.transform.parent = transform;
 
         // Destroy the shell.
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        ResetShellToPool();
+    }
+
+    public override void ResetShellToPool()
+    {
+        targetTank = null;
+        base.ResetShellToPool();
     }
 }

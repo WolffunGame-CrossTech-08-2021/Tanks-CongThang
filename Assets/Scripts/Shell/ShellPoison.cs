@@ -22,27 +22,25 @@ public class ShellPoison : BaseShell, IShootingCharge
 
     public void Fire(float force)
     {
-        GetComponent<Rigidbody>().velocity = transform.forward * force;
+        myRigidbody.velocity = transform.forward * force;
     }
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Field")
+        if (1<<other.gameObject.layer == IgnoreMask.value)
         {
             return;
         }
-        // Unparent the particles from the shell.
-        m_ExplosionParticles.transform.parent = null;
 
-        // Play the particle system.
-        m_ExplosionParticles.Play();
-
-        // Play the explosion sound effect.
-        m_ExplosionAudio.Play();
+        Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);
+        ex.gameObject.transform.position = transform.position;
+        ex.gameObject.SetActive(true);
+        ex.Play();
 
         Instantiate(Field, new Vector3(transform.position.x, 0.1f, transform.position.z), Quaternion.Euler(0,0,0));
         // Once the particles have finished, destroy the gameobject they are on.
-        Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
-        Destroy(gameObject);
+        //Destroy(m_ExplosionParticles.gameObject, m_ExplosionParticles.main.duration);
+        //Destroy(gameObject);
+        ResetShellToPool();
     }
 }
