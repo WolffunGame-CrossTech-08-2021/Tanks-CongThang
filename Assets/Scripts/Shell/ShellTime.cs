@@ -38,11 +38,25 @@ public class ShellTime : BaseShell, IShootingCharge
         }
     }
 
+    public void CreateExtraShell(float force)
+    {
+        BaseShell shellInstance = ManagerShell.Ins.GetShellObject(ShellType.Time_Extra1);
+        Vector3 temp = transform.position;
+        shellInstance.transform.position = new Vector3(temp.x, temp.y + 3, temp.z);
+        shellInstance.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+        shellInstance.gameObject.SetActive(true);
+        shellInstance.Owner = Owner;
+        if (shellInstance is ShellTimeExtraBomb)
+        {
+            (shellInstance as ShellTimeExtraBomb).Fire(force);
+        }
+    }
+
     protected void Explosive()
     {
-        Instantiate(extra, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.Euler(new Vector3(-90, 0, 0))).Fire(Force*2/3);
-        Instantiate(extra, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.Euler(new Vector3(-90, 0, 0))).Fire(Force/2);
-        Instantiate(extra, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.Euler(new Vector3(-90, 0, 0))).Fire(Force/3);
+        CreateExtraShell(Force*2/3);
+        CreateExtraShell(Force/2);
+        CreateExtraShell(Force/3);
 
         // Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
         Collider[] colliders = Physics.OverlapSphere(transform.position, m_ExplosionRadius, m_TankMask);

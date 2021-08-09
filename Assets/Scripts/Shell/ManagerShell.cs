@@ -9,6 +9,7 @@ public enum ShellType
     Straight,
     Poison,
     Time,
+    Time_Extra1,
 }
 
 [System.Serializable]
