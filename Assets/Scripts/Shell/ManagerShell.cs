@@ -11,6 +11,7 @@ public enum ShellType
     Time,
     Time_Extra1,
     Rapid,
+    Scattering,
 }
 
 [System.Serializable]
