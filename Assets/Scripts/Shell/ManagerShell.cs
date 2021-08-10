@@ -18,6 +18,7 @@ public enum ShellType
 public class ShellDictionary
 {
     public ShellType key;
+
     public BaseShell value;
     public Image icon;
     public List<BaseShell> pool = new List<BaseShell>();

@@ -41,7 +41,6 @@ public class ShootingInputScattering : BaseShootingInput
           
             TankShootingRef.m_Fired = true;
         }
-
     }
 
     private void Fire(float angle)
