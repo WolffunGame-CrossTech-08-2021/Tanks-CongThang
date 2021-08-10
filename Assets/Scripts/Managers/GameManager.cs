@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Ins;
+
     public int m_NumRoundsToWin = 5;        
     public float m_StartDelay = 3f;         
     public float m_EndDelay = 3f;           
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Ins = this;
         // Create the delays so they only have to be made once.
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
@@ -138,6 +141,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundEnding()
     {
+        if (RoundEndingEvent != null)
+            RoundEndingEvent.Invoke();
         // Stop tanks from moving.
         DisableTankControl();
 
@@ -161,6 +166,9 @@ public class GameManager : MonoBehaviour
         // Wait for the specified length of time until yielding control back to the game loop.
         yield return m_EndWait;
     }
+
+    public delegate void RoundEndingHandler();
+    public event RoundEndingHandler RoundEndingEvent;
 
 
     // This is used to check if there is one or fewer tanks remaining and thus the round should end.

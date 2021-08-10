@@ -17,6 +17,11 @@ public class BaseStatus : MonoBehaviour
     public string Name;
     public string Description;
 
+    public virtual void Start()
+    {
+        GameManager.Ins.RoundEndingEvent += ResetStatusToPool;
+    }
+
     // Update is called once per frame
     protected virtual void Update()
     {

@@ -9,6 +9,16 @@ public class PoisonField : MonoBehaviour
     public float PoisonFieldLast = 5f;
     public Status status;
 
+    public void Start()
+    {
+        GameManager.Ins.RoundEndingEvent += Remove;
+    }
+
+    public void Remove()
+    {
+        Destroy(gameObject);
+    }
+
     // Update is called once per frame
     void Update()
     {

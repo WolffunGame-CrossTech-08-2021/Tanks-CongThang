@@ -62,7 +62,6 @@ public class TankHealth : MonoBehaviour
 
     private void OnDeath()
     {
-        gameObject.GetComponent<TankInfo>().ClearStatus();
         // Set the flag so that this function is only called once.
         m_Dead = true;
 

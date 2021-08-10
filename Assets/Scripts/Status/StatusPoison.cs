@@ -8,12 +8,6 @@ public class StatusPoison : BaseStatus
     public float timeDelayHit = 0.2f;
     public float timeDelayHit_Count = 0f;
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //}
-
     // Update is called once per frame
     protected override void Update()
     {
