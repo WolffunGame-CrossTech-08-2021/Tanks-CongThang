@@ -17,6 +17,6 @@ public class StatusInstantDamage : BaseStatus, IUnstacking
     {
         if(target != null)
             target.TankHeatlh.TakeDamage(damage);
-        RemoveStatus();
+        Remove();
     }
 }

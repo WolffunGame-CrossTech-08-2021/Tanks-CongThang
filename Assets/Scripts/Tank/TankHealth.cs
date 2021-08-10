@@ -10,7 +10,6 @@ public class TankHealth : MonoBehaviour
     public Color m_ZeroHealthColor = Color.red;    
     public ParticleSystem m_ExplosionPrefab;
 
-
     private AudioSource m_ExplosionAudio;
     private ParticleSystem m_ExplosionParticles;
     [SerializeField] private float m_CurrentHealth;
@@ -63,6 +62,7 @@ public class TankHealth : MonoBehaviour
 
     private void OnDeath()
     {
+        gameObject.GetComponent<TankInfo>().ClearStatus();
         // Set the flag so that this function is only called once.
         m_Dead = true;
 

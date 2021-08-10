@@ -48,4 +48,14 @@ public class TankInfo : MonoBehaviour
     {
         StatusList.Remove(status);
     }
+
+    public void ClearStatus()
+    {
+        int i = StatusList.Count - 1;
+        while (i >= 0 )
+        {
+            StatusList[i].Remove();
+            i--;
+        }
+    }
 }

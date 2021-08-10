@@ -28,6 +28,7 @@ public class StatusPoison : BaseStatus
 
     public void DealDamage()
     {
-        target.TankHeatlh.TakeDamage(damagePerHit);
+        if (target != null) 
+            target.TankHeatlh.TakeDamage(damagePerHit);
     }
 }

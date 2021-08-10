@@ -22,7 +22,7 @@ public class BaseStatus : MonoBehaviour
     {
         if(lifeTimeCount > lifeTime)
         {
-            RemoveStatus();
+            Remove();
         }
         else
         {
@@ -35,12 +35,13 @@ public class BaseStatus : MonoBehaviour
 
     }
 
-    public virtual void RemoveStatus()
+    public virtual void Remove()
     {
         if (triggerEvent)
             if (StatusRemove != null)
                 StatusRemove.Invoke();
-        target.RemoveStatus(this);
+        if(target!=null)
+            target.RemoveStatus(this);
 
         ResetStatusToPool();
         //Destroy(this.gameObject);
