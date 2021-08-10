@@ -41,7 +41,24 @@ public class BaseStatus : MonoBehaviour
             if (StatusRemove != null)
                 StatusRemove.Invoke();
         target.RemoveStatus(this);
-        Destroy(this.gameObject);
+
+        ResetStatusToPool();
+        //Destroy(this.gameObject);
+    }
+
+    public void ActiveStatus()
+    {
+        transform.parent = target.transform;
+        gameObject.SetActive(true);
+    }
+
+    public virtual void ResetStatusToPool()
+    {
+        transform.parent = ManagerStatus.Ins.transform;
+        gameObject.SetActive(false);
+        lifeTimeCount = 0f;
+        stackcount = 0;
+        target = null;
     }
 
     //  Event Handlers --------------------------------

@@ -78,7 +78,9 @@ public class ShellTime : BaseShell, IShootingCharge
                 continue;
 
             // Deal this damage to the tank.
-            targetInfo.TankHeatlh.TakeDamage(m_MaxDamage);
+            //targetInfo.TankHeatlh.TakeDamage(m_MaxDamage);
+            StatusInstantDamage s = targetInfo.AddStatus(Status.InstantDamage) as StatusInstantDamage;
+            s.damage = m_MaxDamage;
         }
 
         Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);

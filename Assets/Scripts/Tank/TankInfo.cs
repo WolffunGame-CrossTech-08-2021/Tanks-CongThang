@@ -11,42 +11,27 @@ public class TankInfo : MonoBehaviour
 
     public List<BaseStatus> StatusList = new List<BaseStatus>();
 
-    public void AddStatus(Status status)
+    public BaseStatus AddStatus(Status status)
     {
-        if (Have(status))
+        BaseStatus s;
+        if (ManagerStatus.Ins.GetStatusPrefab(status) is IUnstacking || !Have(status))
         {
-            BaseStatus s = GetBaseStatus(status);
-            s.stackcount = System.Math.Min(s.stackcount++, s.maxStack);
-            s.lifeTimeCount = 0;
-        }
-        else
-        {
-            BaseStatus s = Instantiate(ManagerStatus.Ins.GetStatusPrefab(status), transform.position, transform.rotation, transform);
+            //BaseStatus s = Instantiate(ManagerStatus.Ins.GetStatusPrefab(status), transform.position, transform.rotation, transform);
+            s = ManagerStatus.Ins.GetStatusObject(status);
+            s.transform.position = transform.position;
+            s.transform.rotation = transform.rotation;
             s.Init();
             StatusList.Add(s);
             s.target = this;
+            s.ActiveStatus();
         }
-    }
-
-    public void Update()
-    {
-        UnityEngine.Profiling.Profiler.BeginSample("---transform");
-
-        for (int i = 0; i < 1000; i++)
+        else
         {
-            transform.position = transform.position;
+            s = GetBaseStatus(status);
+            s.stackcount = System.Math.Min(s.stackcount++, s.maxStack);
+            s.lifeTimeCount = 0;
         }
-
-        UnityEngine.Profiling.Profiler.EndSample();
-
-        UnityEngine.Profiling.Profiler.BeginSample("cache---transform");
-        var cachetransform = transform;
-        for (int i = 0; i < 1000; i++)
-        {
-            cachetransform.position = cachetransform.position;
-        }
-
-        UnityEngine.Profiling.Profiler.EndSample();
+        return s;
     }
 
     public BaseStatus GetBaseStatus(Status status)

@@ -91,7 +91,9 @@ public class ShellStraight : BaseShell, IShootingInstant
             float damage = m_MaxDamage;
 
             // Deal this damage to the tank.
-            targetInfo.TankHeatlh.TakeDamage(damage);
+            StatusInstantDamage s = targetInfo.AddStatus(Status.InstantDamage) as StatusInstantDamage;
+            s.damage = damage;
+            //targetInfo.TankHeatlh.TakeDamage(damage);
         }
 
         Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);

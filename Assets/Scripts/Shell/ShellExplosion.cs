@@ -53,7 +53,9 @@ public class ShellExplosion : BaseShell, IShootingCharge
             float damage = CalculateDamage(targetRigidbody.position);
 
             // Deal this damage to the tank.
-            targetInfo.TankHeatlh.TakeDamage(damage);
+            //targetInfo.TankHeatlh.TakeDamage(damage);
+            StatusInstantDamage s = targetInfo.AddStatus(Status.InstantDamage) as StatusInstantDamage;
+            s.damage = damage;
         }
 
         Explosion ex = ExplosionPool.Ins.GetExplosionlObject(explosionType);
