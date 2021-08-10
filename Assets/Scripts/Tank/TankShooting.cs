@@ -6,6 +6,7 @@ public enum ShootingInputType
 {
     Charge,
     Instant, //will count as keep button
+    Burst,
 }
 
 [System.Serializable]

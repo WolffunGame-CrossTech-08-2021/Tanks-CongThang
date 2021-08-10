@@ -15,7 +15,6 @@ public class StatusInstantDamage : BaseStatus, IUnstacking
 
     void DealDamage()
     {
-        Debug.Log("A");
         if(target != null)
             target.TankHeatlh.TakeDamage(damage);
         RemoveStatus();

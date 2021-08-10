@@ -10,6 +10,7 @@ public enum ShellType
     Poison,
     Time,
     Time_Extra1,
+    Rapid,
 }
 
 [System.Serializable]
