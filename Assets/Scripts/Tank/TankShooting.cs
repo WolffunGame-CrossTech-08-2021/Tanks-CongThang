@@ -73,7 +73,6 @@ public class TankShooting : MonoBehaviour
         {
             c = 0;
         }
-        Debug.Log(c);
         ChangeShootingShell(ShootingShellList[c].type);
     }
 

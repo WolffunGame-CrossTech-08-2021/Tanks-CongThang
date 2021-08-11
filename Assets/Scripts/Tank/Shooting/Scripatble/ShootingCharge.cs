@@ -35,6 +35,7 @@ public class ShootingCharge : BaseShooting
         s.maxLaunchForce = maxLaunchForce;
         s.maxChargeTime = maxChargeTime;
 
+        s.icon = icon;
         s.baseForce = baseForce;
         s.shell = shell;
         s.type = type;

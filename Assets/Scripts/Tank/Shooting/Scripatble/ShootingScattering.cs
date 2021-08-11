@@ -33,6 +33,7 @@ public class ShootingScattering : BaseShooting
         s.DelayFire = DelayFire;
         s.scatteringAngle = scatteringAngle;
 
+        s.icon = icon;
         s.baseForce = baseForce;
         s.shell = shell;
         s.type = type;

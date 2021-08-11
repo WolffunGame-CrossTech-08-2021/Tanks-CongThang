@@ -26,6 +26,7 @@ public class ShootingInstant : BaseShooting
         ShootingInstant s = new ShootingInstant();
         s.DelayFire = DelayFire;
 
+        s.icon = icon;
         s.baseForce = baseForce;
         s.shell = shell;
         s.type = type;

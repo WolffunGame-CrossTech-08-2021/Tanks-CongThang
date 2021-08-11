@@ -16,6 +16,7 @@ public abstract class BaseShooting: ScriptableObject
     public ShootingShellType type;
     public ShellType shell;
     public float baseForce;
+    public Sprite icon;
 
     public abstract void Setup(GameObject obj);
     public abstract void ShootingUpdate();

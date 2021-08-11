@@ -18,7 +18,6 @@ public enum ShellType
 public class ShellDictionaryItem
 {
     public BaseShell prefab;
-    public Image icon;
     public List<BaseShell> pool = new List<BaseShell>();
     public List<BaseShell> usingPool = new List<BaseShell>();
     public int amountToPool;
@@ -56,11 +55,6 @@ public class ManagerShell : MonoBehaviour
     public BaseShell GetShell(ShellType type)
     {
         return GetShellFull(type).prefab;
-    }
-
-    public Image GetIcon(ShellType type)
-    {
-        return GetShellFull(type).icon;
     }
 
     public void CreateAndAddToPool(ShellType type)

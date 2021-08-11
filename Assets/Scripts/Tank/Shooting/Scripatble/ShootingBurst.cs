@@ -35,6 +35,7 @@ public class ShootingBurst : BaseShooting
         s.DelayFire = DelayFire;
         s.delayBurst = delayBurst;
 
+        s.icon = icon;
         s.baseForce = baseForce;
         s.shell = shell;
         s.type = type;
