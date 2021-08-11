@@ -11,8 +11,7 @@ public enum Status
 [System.Serializable]
 public class StatusDictionary
 {
-    public Status key;
-    public BaseStatus value;
+    public BaseStatus prefab;
     public List<BaseStatus> pool = new List<BaseStatus>();
     public int amountToPool;
 }
@@ -20,35 +19,42 @@ public class StatusDictionary
 public class ManagerStatus : MonoBehaviour
 {
     public static ManagerStatus Ins;
-    public List<StatusDictionary> statusDictionary;
+    public List<StatusDictionary> statusList;
+    public Dictionary<Status, StatusDictionary> statusDictionary = new Dictionary<Status, StatusDictionary>();
     // Start is called before the first frame update
     void Start()
     {
         Ins = this;
-        foreach (StatusDictionary full in statusDictionary)
+
+        foreach (StatusDictionary s in statusList)
+        {
+            statusDictionary.Add(s.prefab.id, s);
+        }
+
+        foreach (StatusDictionary full in statusDictionary.Values)
         {
             for (int i = 0; i < full.amountToPool; i++)
             {
-                CreateAndAddToPool(full.key);
+                CreateAndAddToPool(full.prefab.id);
             }
         }
     }
 
     public StatusDictionary GetFull(Status status)
     {
-        return statusDictionary[statusDictionary.FindIndex(s => s.key == status)];
+        return statusDictionary[status];
     }
 
     public BaseStatus GetStatusPrefab(Status status)
     {
-        return GetFull(status).value;
+        return GetFull(status).prefab;
     }
 
     public void CreateAndAddToPool(Status status)
     {
         StatusDictionary full = GetFull(status);
 
-        BaseStatus temp = Instantiate(full.value, transform);
+        BaseStatus temp = Instantiate(full.prefab, transform);
         temp.gameObject.SetActive(false);
         full.pool.Add(temp);
     }
@@ -56,16 +62,20 @@ public class ManagerStatus : MonoBehaviour
     public BaseStatus GetStatusObject(Status status)
     {
         StatusDictionary full = GetFull(status);
-        for (int i = 0; i < full.amountToPool; i++)
+
+        if (full.pool.Count == 0)
         {
-            if (!full.pool[i].gameObject.activeInHierarchy)
-            {
-                return full.pool[i];
-            }
+            CreateAndAddToPool(status);
         }
 
-        CreateAndAddToPool(status);
-        full.amountToPool++;
-        return full.pool[full.amountToPool - 1];
+        BaseStatus s = full.pool[full.pool.Count - 1];
+        full.pool.Remove(s);
+        return s;
+    }
+
+    public void ReturnStatusToPool(BaseStatus bs)
+    {
+        StatusDictionary full = GetFull(bs.id);
+        full.pool.Add(bs);
     }
 }

@@ -18,7 +18,7 @@ public class PlayerInfo : MonoBehaviour
         tankInfo = t;
         tankInfo.TankShooting.ShellChanged += ChangeIcon;
 
-        ChangeIcon();
+        //ChangeIcon();
     }
 
     public void ChangeIcon()
@@ -27,6 +27,6 @@ public class PlayerInfo : MonoBehaviour
         {
             Destroy(currentIcon.gameObject);
         }
-        currentIcon = Instantiate(ManagerShell.Ins.GetIcon(tankInfo.TankShooting.CurrentShell), transform);
+        currentIcon = Instantiate(ManagerShell.Ins.GetIcon(tankInfo.TankShooting.CurrentShootingShell.shell), transform);
     }
 }

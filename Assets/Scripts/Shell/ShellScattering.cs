@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShellScattering : BaseShell, IShootingScattering
+public class ShellScattering : BaseShell
 {
     public float m_Force = 30f;
     public int numberOfShell = 3;
     public float scatteringAngle = 30f;
-
-    public void Fire()
-    {
-        myRigidbody.velocity = transform.forward * m_Force;
-    }
 
     public override void Update()
     {

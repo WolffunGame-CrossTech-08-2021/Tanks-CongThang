@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShellRapid : BaseShell, IShootingBurst
+public class ShellRapid : BaseShell
 {
     public float m_Force = 30f;
     public int numberOfShell = 3;
     public float delayBurst = 0.05f;
-
-    public void Fire()
-    {
-        myRigidbody.velocity = transform.forward * m_Force;
-    }
 
     public override void Update()
     {

@@ -10,7 +10,6 @@ public enum ExplosionType
 [System.Serializable]
 public class ExplosionDictionary
 {
-    public ExplosionType key;
     public Explosion value;
     public List<Explosion> pool = new List<Explosion>();
     public int amountToPool;
@@ -19,24 +18,30 @@ public class ExplosionDictionary
 public class ExplosionPool : MonoBehaviour
 {
     public static ExplosionPool Ins;
-    public List<ExplosionDictionary> explosionDictionary;
+    public List<ExplosionDictionary> explosionList;
+    public Dictionary<ExplosionType, ExplosionDictionary> explosionDictionary = new Dictionary<ExplosionType, ExplosionDictionary>();
     //public List<>
     // Start is called before the first frame update
     void Start()
     {
         Ins = this;
-        foreach (ExplosionDictionary explo in explosionDictionary)
+        foreach (ExplosionDictionary e in explosionList)
+        {
+            explosionDictionary.Add(e.value.type, e);
+        }
+
+        foreach (ExplosionDictionary explo in explosionDictionary.Values)
         {
             for (int i = 0; i < explo.amountToPool; i++)
             {
-                CreateAndAddToPool(explo.key);
+                CreateAndAddToPool(explo.value.type);
             }
         }
     }
 
     public ExplosionDictionary GetFull(ExplosionType type)
     {
-        return explosionDictionary[explosionDictionary.FindIndex(s => s.key == type)];
+        return explosionDictionary[type];
     }
 
     public Explosion GetExplosion(ExplosionType type)
@@ -55,16 +60,18 @@ public class ExplosionPool : MonoBehaviour
     public Explosion GetExplosionlObject(ExplosionType type)
     {
         ExplosionDictionary full = GetFull(type);
-        for (int i = 0; i < full.amountToPool; i++)
+        if (full.pool.Count == 0)
         {
-            if (!full.pool[i].gameObject.activeInHierarchy)
-            {
-                return full.pool[i];
-            }
+            CreateAndAddToPool(type);
         }
+        Explosion e = full.pool[full.pool.Count - 1];
+        full.pool.Remove(e);
+        return e;
+    }
 
-        CreateAndAddToPool(type);
-        full.amountToPool++;
-        return full.pool[full.amountToPool - 1];
+    public void ReturnExplosionToPool(Explosion explosion)
+    {
+        ExplosionDictionary full = GetFull(explosion.type);
+        full.pool.Add(explosion);
     }
 }

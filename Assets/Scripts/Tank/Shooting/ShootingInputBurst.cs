@@ -6,20 +6,16 @@ public class ShootingInputBurst : BaseShootingInput
 {
     public int numberOfShell;
     public int numberOfShell_Count;
-    private float DelayFire = 0.2f; //make sure no autoclick spam attack
+    public float DelayFire = 0.2f; //make sure no autoclick spam attack
     private float DelayFire_Count = 0f;
 
     public float delayBurst = 0.05f;
     public float delayBurst_Count = 0f;
 
-    public override void Setup()
+    public void SelfSetup()
     {
-        base.Setup();
         // The slider should have a default value of the minimum launch force.
         TankShootingRef.m_AimSlider.value = 15f;
-
-        Shell = ManagerShell.Ins.GetShell(TankShootingRef.CurrentShell);
-        (Shell as IShootingBurst).Setup(this);
     }
 
     public override void ShootingUpdate()
@@ -54,7 +50,7 @@ public class ShootingInputBurst : BaseShootingInput
 
     }
 
-    private void Fire()
+    public void Fire()
     {
         // Set the fired flag so only Fire is only called once.
         TankShootingRef.m_Fired = true;
@@ -62,16 +58,14 @@ public class ShootingInputBurst : BaseShootingInput
         Transform temp = TankShootingRef.m_FireTransform;
         Quaternion rotationTemp = Quaternion.Euler(0, temp.rotation.eulerAngles.y, temp.rotation.eulerAngles.z);
         //BaseShell shellInstance = Instantiate(Shell, TankShootingRef.m_FireTransform.position, rotationTemp);
-        BaseShell shellInstance = ManagerShell.Ins.GetShellObject(TankShootingRef.CurrentShell);
+        BaseShell shellInstance = ManagerShell.Ins.GetShellObject(shell);
+        shellInstance.force = force;
         shellInstance.transform.position = temp.position;
         shellInstance.transform.rotation = rotationTemp;
         shellInstance.gameObject.SetActive(true);
 
         shellInstance.Owner = TankShootingRef.GetComponent<TankInfo>();
-        if (shellInstance is IShootingBurst)
-        {
-            (shellInstance as IShootingBurst).Fire();
-        }
+        shellInstance.Fire();
         // Change the clip to the firing clip and play it.
         TankShootingRef.m_ShootingAudio.clip = TankShootingRef.m_FireClip;
         TankShootingRef.m_ShootingAudio.Play();

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
+    public ExplosionType type;
+
     public ParticleSystem effect;
     public AudioSource audioSource;
 
@@ -22,6 +24,7 @@ public class Explosion : MonoBehaviour
         if (lifeTimeCount > lifeTime)
         {
             effect.Stop();
+            ExplosionPool.Ins.ReturnExplosionToPool(this);
             gameObject.SetActive(false);
             lifeTimeCount = 0f;
         }

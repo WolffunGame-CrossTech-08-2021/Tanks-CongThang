@@ -61,6 +61,7 @@ public class BaseStatus : MonoBehaviour
     public virtual void ResetStatusToPool()
     {
         transform.parent = ManagerStatus.Ins.transform;
+        ManagerStatus.Ins.ReturnStatusToPool(this);
         gameObject.SetActive(false);
         lifeTimeCount = 0f;
         stackcount = 0;

@@ -9,11 +9,6 @@ public class ShellTimeExtraBomb : BaseShell
 
     public float m_MaxChargeTime = 0.75f;
 
-    public void Fire(float force)
-    {
-        myRigidbody.velocity = transform.forward * force;
-    }
-
     protected void OnTriggerEnter(Collider other)
     {
         if (1 << other.gameObject.layer == IgnoreMask.value)

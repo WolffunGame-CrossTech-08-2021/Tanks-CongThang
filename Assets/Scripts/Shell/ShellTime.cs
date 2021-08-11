@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShellTime : BaseShell, IShootingCharge
+public class ShellTime : BaseShell
 {
     public float m_ExplosionRadius = 5f;
 
@@ -14,19 +14,6 @@ public class ShellTime : BaseShell, IShootingCharge
     public float Force = 15f;
 
     public ShellTimeExtraBomb extra;
-
-    public void Setup(ShootingInputCharge i)
-    {
-        i.m_MinLaunchForce = m_MinLaunchForce;
-        i.m_MaxLaunchForce = m_MaxLaunchForce;
-        i.m_MaxChargeTime = m_MaxChargeTime;
-    }
-
-    public void Fire(float force)
-    {
-        TimeCountDown = force;
-        GetComponent<Rigidbody>().velocity = transform.forward * Force;
-    }
 
     public override void Update()
     {
@@ -46,10 +33,7 @@ public class ShellTime : BaseShell, IShootingCharge
         shellInstance.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
         shellInstance.gameObject.SetActive(true);
         shellInstance.Owner = Owner;
-        if (shellInstance is ShellTimeExtraBomb)
-        {
-            (shellInstance as ShellTimeExtraBomb).Fire(force);
-        }
+        shellInstance.Fire();
     }
 
     protected void Explosive()

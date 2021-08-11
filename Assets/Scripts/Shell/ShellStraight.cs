@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShellStraight : BaseShell, IShootingInstant
+public class ShellStraight : BaseShell
 {
     public float m_ExplosionForce = 120f;
     public float m_ExplosionRadius = 2f;
@@ -14,16 +14,9 @@ public class ShellStraight : BaseShell, IShootingInstant
 
     public float DelayFire = 0.4f;
 
-    public float m_Force = 30f;
-
     public void Setup(ShootingInputInstant i)
     {
         i.DelayFire = DelayFire;
-    }
-
-    public void Fire()
-    {
-        myRigidbody.velocity = transform.forward * m_Force;
     }
 
     public override void Update()
@@ -35,7 +28,7 @@ public class ShellStraight : BaseShell, IShootingInstant
             Vector3 target = targetTank.gameObject.transform.position - transform.position;
             target.Set(target.x, 0, target.z);
             //Debug.Log(target.x + " " + target.y + " " + target.z);
-            myRigidbody.velocity = Vector3.SmoothDamp(myRigidbody.velocity, target / target.magnitude * m_Force, ref accelarate, 0.1f);
+            myRigidbody.velocity = Vector3.SmoothDamp(myRigidbody.velocity, target / target.magnitude * force, ref accelarate, 0.1f);
             float angleBetween = Vector3.Angle(transform.forward, target);
             transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + angleBetween, transform.rotation.eulerAngles.z));
         }

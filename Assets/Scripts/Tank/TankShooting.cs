@@ -25,50 +25,56 @@ public class TankShooting : MonoBehaviour
     public Slider m_AimSlider;           
     public AudioSource m_ShootingAudio;  
     public AudioClip m_ChargingClip;     
-    public AudioClip m_FireClip;         
+    public AudioClip m_FireClip;
+
+    public float minLaunchArrow = 15f;
+    public float maxLaunchArrow = 30f;
+
+    public float currentChargeTime = 0f;
+    public float maxChargeTime = 0.75f;
 
     public string m_FireButton;
     public string m_ChangeButton;
     public bool m_Fired;
 
-    public List<ShellType> MyShells;
-    public ShellType CurrentShell;
+    public List<BaseShooting> ShootingShellList;
 
-    public BaseShootingInput CurrentShootingInput = null;
+    public Dictionary<ShootingShellType,BaseShooting> ShootingShellDictionary = new Dictionary<ShootingShellType, BaseShooting>();
+    //public ShellType CurrentShell;
 
-    public List<ShootingInputDictionary> ListShootingInput;
+    public BaseShooting CurrentShootingShell = null;
 
     private void Start ()
     {
+        foreach(BaseShooting s in ShootingShellList)
+        {
+            ShootingShellDictionary.Add(s.type, s.Clone());
+        }
+
         // The fire axis is based on the player number.
         m_FireButton = "Fire" + m_PlayerNumber;
         m_ChangeButton = "ChangeShell" + m_PlayerNumber;
-        ChangeShell(ShellType.Explosion);
+        ChangeShootingShell(ShootingShellList[0].type);
     }
 
-    public void ChangeShell(ShellType type)
+    public void ChangeShootingShell(ShootingShellType type)
     {
-        if(CurrentShootingInput != null)
-        {
-            //Destroy(CurrentShootingInput.gameObject);
-            CurrentShootingInput = null;
-        }
-        CurrentShell = type;
-        CurrentShootingInput = ListShootingInput.Find(x => ManagerShell.Ins.GetShell(CurrentShell).shootingType == x.keys).value;
-        CurrentShootingInput.Setup();
-        //CurrentShootingInput.TankShootingRef = this;
+        CurrentShootingShell = ShootingShellDictionary[type];
+        CurrentShootingShell.Setup(gameObject);
+
         ShellChanged.Invoke();
     }
 
     public void ClickChangeShellButton()
     {
-        int c = MyShells.IndexOf(CurrentShell);
+        int c = ShootingShellList.FindIndex(x => x.type == CurrentShootingShell.type);
         c++;
-        if(c == MyShells.Count)
+        if (c == ShootingShellList.Count)
         {
             c = 0;
         }
-        ChangeShell(MyShells[c]);
+        Debug.Log(c);
+        ChangeShootingShell(ShootingShellList[c].type);
     }
 
     private void Update ()
@@ -77,7 +83,7 @@ public class TankShooting : MonoBehaviour
         {
             ClickChangeShellButton();
         }
-        CurrentShootingInput.ShootingUpdate();
+        CurrentShootingShell.ShootingUpdate();
     }
 
     //  Event Handlers --------------------------------

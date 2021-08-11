@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShellPoison : BaseShell, IShootingCharge
+public class ShellPoison : BaseShell
 {
     public ParticleSystem m_ExplosionParticles;
     public AudioSource m_ExplosionAudio;
@@ -12,18 +12,6 @@ public class ShellPoison : BaseShell, IShootingCharge
     public float m_MaxChargeTime = 0.75f;
 
     public PoisonField Field;
-
-    public void Setup(ShootingInputCharge i)
-    {
-        i.m_MinLaunchForce = m_MinLaunchForce;
-        i.m_MaxLaunchForce = m_MaxLaunchForce;
-        i.m_MaxChargeTime = m_MaxChargeTime;
-    }
-
-    public void Fire(float force)
-    {
-        myRigidbody.velocity = transform.forward * force;
-    }
 
     protected void OnTriggerEnter(Collider other)
     {

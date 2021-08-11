@@ -16,6 +16,7 @@ public class PoisonField : MonoBehaviour
 
     public void Remove()
     {
+        GameManager.Ins.RoundEndingEvent -= Remove;
         Destroy(gameObject);
     }
 
@@ -25,7 +26,7 @@ public class PoisonField : MonoBehaviour
         PoisonFieldLast -= Time.deltaTime;
         if (PoisonFieldLast < 0)
         {
-            Destroy(gameObject);
+            Remove();
         }
         // Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
         Collider[] colliders = Physics.OverlapSphere(transform.position, PoisonRadius, TankMask);

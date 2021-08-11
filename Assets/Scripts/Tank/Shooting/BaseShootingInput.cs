@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseShootingInput: MonoBehaviour
+public abstract class BaseShootingInput : MonoBehaviour
 {
     public TankShooting TankShootingRef;
-    public BaseShell Shell;
-    public virtual void ShootingUpdate()
-    {
+    public ShellType shell;
+    public float force;
 
-    }
-
-    public virtual void Setup()
-    {
-
-    }
+    public abstract void ShootingUpdate();
 }
